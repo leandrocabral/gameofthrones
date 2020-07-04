@@ -4,5 +4,5 @@ import com.leandroid.domain.Book
 import io.reactivex.Single
 
 interface BookService {
-    fun getBook(): Single<Book>
+    fun getBook(): Single<List<Book>>
 }

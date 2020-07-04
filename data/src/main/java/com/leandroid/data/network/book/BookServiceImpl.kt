@@ -9,7 +9,7 @@ class BookServiceImpl(private var retrofit: Retrofit) : BookService {
 
     private val remoteBookService by lazy { retrofit.create(RemoteBookService::class.java) }
 
-    override fun getBook(): Single<Book> {
+    override fun getBook(): Single<List<Book>> {
         return remoteBookService.load()
     }
 }

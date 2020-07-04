@@ -5,6 +5,6 @@ import io.reactivex.Single
 import retrofit2.http.GET
 
 interface RemoteBookService {
-    @GET("/books")
-    fun load(): Single<Book>
+    @GET("books")
+    fun load(): Single<List<Book>>
 }
