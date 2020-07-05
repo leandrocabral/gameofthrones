@@ -20,12 +20,12 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash_activity)
 
-        viewModel.loadData()
+        viewModel.syncdData()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
 
-        viewModel.dataLoad.observe(this, Observer { isDataLoad ->
+        viewModel.dataSync.observe(this, Observer { isDataLoad ->
             if (isDataLoad) {
                 val intent = Intent(this@SplashActivity, MainActivity::class.java)
                 startActivity(intent)

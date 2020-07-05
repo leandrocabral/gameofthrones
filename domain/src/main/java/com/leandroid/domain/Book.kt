@@ -3,9 +3,7 @@ package com.leandroid.domain
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.realm.RealmList
-import io.realm.RealmModel
 import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -30,5 +28,5 @@ open class Book(
     @JsonProperty("characters")
     var characters: RealmList<String>? = null,
     @JsonProperty("povCharacters")
-    var povCharacters: RealmList<String>? = null
+    var povCharacters: RealmList<String> = RealmList<String>()
 ) : RealmObject()

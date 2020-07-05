@@ -21,9 +21,9 @@ class SplashViewModel(
 ) : AndroidViewModel(application) {
 
     val books = MutableLiveData<List<Book>>()
-    val dataLoad = MutableLiveData<Boolean>()
+    val dataSync = MutableLiveData<Boolean>()
 
-    fun loadData(): Single<Boolean> {
+    fun syncdData(): Single<Boolean> {
         return remoteBookService.getBook()
             .flatMap { booksRemote ->
                 localBookStore.load()
@@ -31,7 +31,7 @@ class SplashViewModel(
                         if (booksLocal.isEmpty()) {
                             syncCharacter(booksRemote)
                         } else {
-                            dataLoad.postValue(true)
+                            dataSync.postValue(true)
                         }
                         books.postValue(booksRemote)
                     }.subscribe()
@@ -42,8 +42,8 @@ class SplashViewModel(
     private fun syncCharacter(books: List<Book>) {
         localBookStore.save(books)
         for ((indexBook, book) in books.withIndex()) {
-            for (character in book.povCharacters!!) {
-                if (book.povCharacters!!.isNotEmpty()) {
+            for (character in book.povCharacters) {
+                if (book.povCharacters.isNotEmpty()) {
                     remoteCharacterService.getCharacter(character.getIdCharacter())
                         .doOnSuccess { character ->
                             localCharacterStore.save(character)
@@ -53,7 +53,7 @@ class SplashViewModel(
                 }
             }
             if (book.isLastBook(indexBook, books)) {
-                dataLoad.postValue(true)
+                dataSync.postValue(true)
             }
         }
     }
