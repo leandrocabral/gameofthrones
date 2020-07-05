@@ -1,7 +1,10 @@
 package com.leandroid.gameofthrones.splash
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.Observer
+import com.leandroid.gameofthrones.MainActivity
 import com.leandroid.gameofthrones.R
 import com.leandroid.gameofthrones.databinding.SplashActivityBinding
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,16 +20,17 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash_activity)
 
-        viewModel.loadBook()
+        viewModel.loadData()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
 
-        viewModel.dataLoad
-            .doOnNext {isDataLoad->
-            if(isDataLoad){
-
+        viewModel.dataLoad.observe(this, Observer { isDataLoad ->
+            if (isDataLoad) {
+                val intent = Intent(this@SplashActivity, MainActivity::class.java)
+                startActivity(intent)
+                finish()
             }
-        }
+        })
     }
 }

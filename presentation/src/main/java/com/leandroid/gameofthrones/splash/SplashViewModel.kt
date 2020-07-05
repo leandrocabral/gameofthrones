@@ -8,8 +8,9 @@ import com.leandroid.data.local.repository.CharacterRespository
 import com.leandroid.data.network.service.BookService
 import com.leandroid.data.network.service.CharacterService
 import com.leandroid.domain.Book
+import com.leandroid.gameofthrones.extension.getIdCharacter
+import com.leandroid.gameofthrones.extension.isLastBook
 import io.reactivex.Single
-import io.reactivex.subjects.BehaviorSubject
 
 class SplashViewModel(
     application: Application,
@@ -19,27 +20,37 @@ class SplashViewModel(
     private var localCharacterStore: CharacterRespository
 ) : AndroidViewModel(application) {
 
-    private val books = MutableLiveData<List<Book>>()
-    val dataLoad: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    val books = MutableLiveData<List<Book>>()
+    val dataLoad = MutableLiveData<Boolean>()
 
-    fun loadBook(): Single<List<Book>> {
+    fun loadData(): Single<Boolean> {
         return remoteBookService.getBook()
             .flatMap { booksRemote ->
                 localBookStore.load()
                     .doOnSuccess { booksLocal ->
                         if (booksLocal.isEmpty()) {
                             localBookStore.save(booksRemote)
+                            for ((indexBook, book) in booksRemote.withIndex()) {
+                                for (character in book.povCharacters!!) {
+                                    if(book.povCharacters!!.isNotEmpty()){
+                                        remoteCharacterService.getCharacter(character.getIdCharacter())
+                                            .doOnSuccess { character ->
+                                                localCharacterStore.save(character)
+                                            }.doOnError { throwable ->
+                                                throwable.stackTrace
+                                            }.subscribe()
+                                    }
+                                }
+                                if (book.isLastBook(indexBook, booksRemote)) {
+                                    dataLoad.postValue(true)
+                                }
+                            }
+                        }else{
+                            dataLoad.postValue(true)
                         }
-                        books.apply { booksRemote }
+                        books.postValue(booksRemote)
                     }.subscribe()
-                Single.just(booksRemote)
+                Single.just(true)
             }
-    }
-
-    fun loadCharacter(): Single<Boolean> {
-        for (book in books.value!!) {
-            dataLoad.onNext(true)
-        }
-        return Single.just(true)
     }
 }

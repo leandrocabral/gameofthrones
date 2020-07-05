@@ -4,5 +4,5 @@ import com.leandroid.domain.Character
 import io.reactivex.Single
 
 interface CharacterService {
-    fun getCharacter(): Single<Character>
+    fun getCharacter(idCharacter: Int): Single<Character>
 }

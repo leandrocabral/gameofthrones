@@ -9,7 +9,7 @@ class CharacterServiceImpl(private var retrofit: Retrofit) : CharacterService {
 
     private val remoteCharacterService by lazy { retrofit.create(RemoteCharacterService::class.java) }
 
-    override fun getCharacter(): Single<Character> {
-        return remoteCharacterService.load()
+    override fun getCharacter(idCharacter: Int): Single<Character> {
+        return remoteCharacterService.load(idCharacter)
     }
 }

@@ -8,5 +8,5 @@ import org.koin.dsl.module
 
 val presentationModule = module {
     viewModel { CharacterViewModel(androidApplication(),get(),get()) }
-    viewModel { SplashViewModel(androidApplication(),get(),get()) }
+    viewModel { SplashViewModel(androidApplication(),get(),get(),get(),get()) }
 }
