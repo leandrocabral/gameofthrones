@@ -5,17 +5,13 @@ import com.leandroid.data.local.AppDatabase
 import com.leandroid.data.local.repository.BookRepository
 import com.leandroid.domain.Book
 import io.reactivex.Maybe
+import io.realm.Case
 import io.realm.Realm
 
 class LocalBookStore(var context: Context, var appDatabase: AppDatabase) : BookRepository {
     override fun load(): Maybe<List<Book>> {
         val realm: Realm = Realm.getDefaultInstance()
         val realmObject = realm.where(Book::class.java)
-            .beginGroup()
-            .equalTo("name", "")
-            .or()
-            .contains("name", "")
-            .endGroup()
             .findAll()
 
         val list: List<Book> = realmObject.subList(0, realmObject.size)

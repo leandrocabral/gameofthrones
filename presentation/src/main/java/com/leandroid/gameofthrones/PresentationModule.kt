@@ -7,6 +7,6 @@ import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val presentationModule = module {
-    viewModel { CharacterViewModel(androidApplication(),get(),get()) }
+    viewModel { CharacterViewModel(androidApplication(),get()) }
     viewModel { SplashViewModel(androidApplication(),get(),get(),get(),get()) }
 }

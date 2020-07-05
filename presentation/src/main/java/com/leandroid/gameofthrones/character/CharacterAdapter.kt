@@ -17,7 +17,7 @@ class CharacterAdapter(var characters: List<Character>) :
 
     override fun onBindViewHolder(charactersViewHolder: CharacterViewHolder, i: Int) {
         val card = charactersViewHolder.vCommomCardView
-
+        card.setName(characters[i].name)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): CharacterViewHolder {
@@ -31,7 +31,6 @@ class CharacterAdapter(var characters: List<Character>) :
 
         init {
             vCommomCardView = v.findViewById(R.id.ccv_character)
-
         }
     }
 }

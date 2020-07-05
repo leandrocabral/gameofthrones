@@ -3,4 +3,5 @@
     <dimen name="widget_toolbar_header_title_margin">16dp</dimen>
     <dimen name="widget_toolbar_header_title_size">24dp</dimen>
     <dimen name="splash_logo_size">36dp</dimen>
+    <dimen name="widget_commom_card_name_padding">16dp</dimen>
 </resources>
