@@ -13,6 +13,7 @@ class LocalCharacterStore(var context: Context, var appDatabase: AppDatabase) :
     override fun load(search: String): Maybe<List<Character>> {
         val realm: Realm = Realm.getDefaultInstance()
         var realmObject = realm.where(Character::class.java)
+            .distinct("name")
             .findAll()
 
         var list: List<Character> = listOf()
