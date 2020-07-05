@@ -1,6 +1,5 @@
 package com.leandroid.data.local.repository
 
-import io.reactivex.Completable
 import io.reactivex.Maybe
 import com.leandroid.domain.Character
 

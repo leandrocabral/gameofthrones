@@ -17,19 +17,5 @@ class CharacterViewModel(
     private var localBookStore: BookRepository
 ) : AndroidViewModel(application) {
 
-    private val character = MutableLiveData<List<Character>>()
 
-    fun getBook(): Single<List<Book>> {
-
-        localBookStore.load("")
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess {books->
-                Log.i("bookLocal",books.toString())
-            }.subscribe()
-
-        localBookStore.save(Book(name="Teste"))
-
-        return remoteBookService.getBook()
-    }
 }

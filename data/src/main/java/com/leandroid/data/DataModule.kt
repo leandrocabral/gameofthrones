@@ -6,12 +6,16 @@ import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.leandroid.data.local.AppDatabase
 import com.leandroid.data.local.book.LocalBookStore
+import com.leandroid.data.local.character.LocalCharacterStore
 import com.leandroid.data.local.repository.BookRepository
+import com.leandroid.data.local.repository.CharacterRespository
 import com.leandroid.data.network.InterceptorFactory
 import com.leandroid.data.network.OkHttpFactory
 import com.leandroid.data.network.RetrofitFactory
 import com.leandroid.data.network.book.BookServiceImpl
+import com.leandroid.data.network.character.CharacterServiceImpl
 import com.leandroid.data.network.service.BookService
+import com.leandroid.data.network.service.CharacterService
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Converter
@@ -66,6 +70,15 @@ val dataModule = module {
 
     single<BookRepository> {
         LocalBookStore(androidContext(),get())
+    }
+
+    //region Character
+    single<CharacterService> {
+        CharacterServiceImpl(get())
+    }
+
+    single<CharacterRespository> {
+        LocalCharacterStore(androidContext(),get())
     }
 
 }

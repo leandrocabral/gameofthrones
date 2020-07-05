@@ -35,14 +35,7 @@ class CharacterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getBook()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess { books ->
-                Log.i("books",books.toString())
-            }.doOnError { error ->
-                Log.i("books",error.message)
-            }.subscribe()
+
 
     }
 }

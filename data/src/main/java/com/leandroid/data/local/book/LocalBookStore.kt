@@ -8,7 +8,7 @@ import io.reactivex.Maybe
 import io.realm.Realm
 
 class LocalBookStore(var context: Context, var appDatabase: AppDatabase) : BookRepository {
-    override fun load(search: String): Maybe<List<Book>> {
+    override fun load(): Maybe<List<Book>> {
         val realm: Realm = Realm.getDefaultInstance()
         val realmObject = realm.where(Book::class.java)
             .beginGroup()
@@ -22,12 +22,13 @@ class LocalBookStore(var context: Context, var appDatabase: AppDatabase) : BookR
         return Maybe.just(list)
     }
 
-    override fun save(book: Book) {
+    override fun save(books: List<Book>) {
         val realm: Realm = Realm.getDefaultInstance()
-        realm.beginTransaction()
-        val realObject = realm.createObject(Book::class.java)
-
-        realObject.name = book.name
-        realm.commitTransaction()
+        for(book in books){
+            realm.beginTransaction()
+            val realObject = realm.createObject(Book::class.java)
+            realObject.name = book.name
+            realm.commitTransaction()
+        }
     }
 }
