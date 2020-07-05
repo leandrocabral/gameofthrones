@@ -29,28 +29,32 @@ class SplashViewModel(
                 localBookStore.load()
                     .doOnSuccess { booksLocal ->
                         if (booksLocal.isEmpty()) {
-                            localBookStore.save(booksRemote)
-                            for ((indexBook, book) in booksRemote.withIndex()) {
-                                for (character in book.povCharacters!!) {
-                                    if(book.povCharacters!!.isNotEmpty()){
-                                        remoteCharacterService.getCharacter(character.getIdCharacter())
-                                            .doOnSuccess { character ->
-                                                localCharacterStore.save(character)
-                                            }.doOnError { throwable ->
-                                                throwable.stackTrace
-                                            }.subscribe()
-                                    }
-                                }
-                                if (book.isLastBook(indexBook, booksRemote)) {
-                                    dataLoad.postValue(true)
-                                }
-                            }
-                        }else{
+                            syncCharacter(booksRemote)
+                        } else {
                             dataLoad.postValue(true)
                         }
                         books.postValue(booksRemote)
                     }.subscribe()
                 Single.just(true)
             }
+    }
+
+    private fun syncCharacter(books: List<Book>) {
+        localBookStore.save(books)
+        for ((indexBook, book) in books.withIndex()) {
+            for (character in book.povCharacters!!) {
+                if (book.povCharacters!!.isNotEmpty()) {
+                    remoteCharacterService.getCharacter(character.getIdCharacter())
+                        .doOnSuccess { character ->
+                            localCharacterStore.save(character)
+                        }.doOnError { throwable ->
+                            throwable.stackTrace
+                        }.subscribe()
+                }
+            }
+            if (book.isLastBook(indexBook, books)) {
+                dataLoad.postValue(true)
+            }
+        }
     }
 }
