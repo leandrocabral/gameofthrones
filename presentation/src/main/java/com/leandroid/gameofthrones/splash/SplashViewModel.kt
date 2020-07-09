@@ -10,7 +10,10 @@ import com.leandroid.data.network.service.CharacterService
 import com.leandroid.domain.Book
 import com.leandroid.gameofthrones.extension.getIdCharacter
 import com.leandroid.gameofthrones.extension.isLastBook
-import io.reactivex.Single
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SplashViewModel(
     application: Application,
@@ -20,40 +23,44 @@ class SplashViewModel(
     private var localCharacterStore: CharacterRespository
 ) : AndroidViewModel(application) {
 
-    val books = MutableLiveData<List<Book>>()
-    val dataSync = MutableLiveData<Boolean>()
+    val booksLiveData = MutableLiveData<List<Book>>()
+    val dataSyncLiveData = MutableLiveData<Boolean>()
 
-    fun syncdData(): Single<Boolean> {
-        return remoteBookService.getBook()
-            .flatMap { booksRemote ->
-                localBookStore.load()
-                    .doOnSuccess { booksLocal ->
-                        if (booksLocal.isEmpty()) {
-                            syncCharacter(booksRemote)
-                        } else {
-                            dataSync.postValue(true)
-                        }
-                        books.postValue(booksRemote)
-                    }.subscribe()
-                Single.just(true)
+    fun syncdData() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val bookRemote = withContext(Dispatchers.Default) {
+                remoteBookService.getBook()
             }
+            booksLiveData.value = bookRemote
+
+            val booksLocal =  withContext(Dispatchers.Default) {
+                localBookStore.load()
+            }
+
+            if(booksLocal.isEmpty()){
+                syncCharacter(bookRemote)
+            }else{
+                dataSyncLiveData.value = true
+            }
+        }
     }
 
-    private fun syncCharacter(books: List<Book>) {
-        localBookStore.save(books)
-        for ((indexBook, book) in books.withIndex()) {
-            for (character in book.povCharacters) {
-                if (book.povCharacters.isNotEmpty()) {
-                    remoteCharacterService.getCharacter(character.getIdCharacter())
-                        .doOnSuccess { character ->
-                            localCharacterStore.save(character)
-                        }.doOnError { throwable ->
-                            throwable.stackTrace
-                        }.subscribe()
+    private fun syncCharacter(books: List<Book>?) {
+        CoroutineScope(Dispatchers.Main).launch {
+            localBookStore.save(books)
+
+            for ((indexBook, book) in books?.withIndex()!!) {
+                for (character in book.povCharacters) {
+                    if (book.povCharacters.isNotEmpty()) {
+                        val characterRemote = withContext(Dispatchers.Default) {
+                            remoteCharacterService.getCharacter(character.getIdCharacter())
+                        }
+                        localCharacterStore.save(characterRemote)
+                    }
                 }
-            }
-            if (book.isLastBook(indexBook, books)) {
-                dataSync.postValue(true)
+                if (book.isLastBook(indexBook, books)) {
+                    dataSyncLiveData.value = true
+                }
             }
         }
     }

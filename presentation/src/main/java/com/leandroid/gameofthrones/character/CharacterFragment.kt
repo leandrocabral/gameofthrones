@@ -35,9 +35,8 @@ class CharacterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.loadCharacter()
-            .subscribe()
 
-        viewModel.characters.observe(viewLifecycleOwner, Observer { characters ->
+        viewModel.charactersLiveData.observe(viewLifecycleOwner, Observer { characters ->
             mountList(characters)
         })
 

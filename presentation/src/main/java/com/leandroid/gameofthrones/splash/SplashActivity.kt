@@ -7,8 +7,6 @@ import androidx.lifecycle.Observer
 import com.leandroid.gameofthrones.MainActivity
 import com.leandroid.gameofthrones.R
 import com.leandroid.gameofthrones.databinding.SplashActivityBinding
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SplashActivity : AppCompatActivity() {
@@ -21,11 +19,8 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.splash_activity)
 
         viewModel.syncdData()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe()
 
-        viewModel.dataSync.observe(this, Observer { isDataLoad ->
+        viewModel.dataSyncLiveData.observe(this, Observer { isDataLoad ->
             if (isDataLoad) {
                 val intent = Intent(this@SplashActivity, MainActivity::class.java)
                 startActivity(intent)

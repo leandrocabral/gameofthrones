@@ -22,9 +22,9 @@ open class Character(
     @JsonProperty("died")
     var died: String? = null,
     @JsonProperty("titles")
-    var titles: RealmList<String> = RealmList<String>(),
+    var titles: RealmList<String>? = RealmList<String>(),
     @JsonProperty("aliases")
-    var aliases: RealmList<String> = RealmList<String>(),
+    var aliases: RealmList<String>? = RealmList<String>(),
     @JsonProperty("father")
     var father: String? = null,
     @JsonProperty("mother")
@@ -32,13 +32,13 @@ open class Character(
     @JsonProperty("spouse")
     var spouse: String? = null,
     @JsonProperty("allegiances")
-    var allegiances: RealmList<String> = RealmList<String>(),
+    var allegiances: RealmList<String>? = RealmList<String>(),
     @JsonProperty("books")
-    var books: RealmList<String> = RealmList<String>(),
+    var books: RealmList<String>? = RealmList<String>(),
     @JsonProperty("povBooks")
-    var povBooks: RealmList<String> = RealmList<String>(),
+    var povBooks: RealmList<String>? = RealmList<String>(),
     @JsonProperty("tvSeries")
-    var tvSeries: RealmList<String> = RealmList<String>(),
+    var tvSeries: RealmList<String>? = RealmList<String>(),
     @JsonProperty("playedBy")
-    var playedBy: RealmList<String> = RealmList<String>()
+    var playedBy: RealmList<String>? = RealmList<String>()
 ) : RealmObject()
