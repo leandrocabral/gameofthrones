@@ -5,8 +5,6 @@ import com.leandroid.data.local.AppDatabase
 import com.leandroid.data.local.repository.CharacterRespository
 import com.leandroid.domain.Character
 import io.realm.Realm
-import io.reactivex.Maybe
-import io.realm.Case
 
 class LocalCharacterStore(var context: Context, var appDatabase: AppDatabase) :
     CharacterRespository {

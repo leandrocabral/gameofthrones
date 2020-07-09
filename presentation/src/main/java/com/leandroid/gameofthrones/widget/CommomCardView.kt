@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.getStringOrThrow
+import androidx.core.content.withStyledAttributes
 import com.leandroid.gameofthrones.R
 
 class CommomCardView
@@ -15,10 +17,13 @@ class CommomCardView
 
     init {
         inflate(context, R.layout.widget_commom_card, this)
+        applyAttributes(attrs, defStyleAttr)
     }
 
-    fun setName(name: String?) {
-        nameView.text = name
+    private fun applyAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
+        context.withStyledAttributes(attrs, R.styleable.CommomCard, defStyleAttr) {
+            nameView.text = getStringOrThrow(R.styleable.CommomCard_commom_card_description)
+        }
     }
 
 }

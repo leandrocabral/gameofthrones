@@ -3,9 +3,11 @@ package com.leandroid.gameofthrones.character
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.leandroid.domain.Character
 import com.leandroid.gameofthrones.R
+import com.leandroid.gameofthrones.databinding.CharacterItemBinding
 import com.leandroid.gameofthrones.widget.CommomCardView
 
 class CharacterAdapter(var characters: List<Character>) :
@@ -15,22 +17,21 @@ class CharacterAdapter(var characters: List<Character>) :
         return characters.size
     }
 
-    override fun onBindViewHolder(charactersViewHolder: CharacterViewHolder, i: Int) {
-        val card = charactersViewHolder.vCommomCardView
-        card.setName(characters[i].name)
+    override fun onBindViewHolder(holder: CharacterViewHolder, i: Int) {
+        holder.characterItemBinding.character = characters[i]
     }
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): CharacterViewHolder {
-        val itemView: View = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.character_item, viewGroup, false)
-        return CharacterViewHolder(itemView)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, i: Int): CharacterViewHolder =
+        CharacterViewHolder(
+            DataBindingUtil.inflate<CharacterItemBinding>(
+                LayoutInflater.from(parent.context),
+                R.layout.character_item,
+                parent,
+                false
+            )
+        )
 
-    class CharacterViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        var vCommomCardView: CommomCardView
+    class CharacterViewHolder(val characterItemBinding: CharacterItemBinding)
+        : RecyclerView.ViewHolder(characterItemBinding.root)
 
-        init {
-            vCommomCardView = v.findViewById(R.id.ccv_character)
-        }
-    }
 }
